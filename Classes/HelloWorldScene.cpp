@@ -1,5 +1,6 @@
 #include "HelloWorldScene.h"
 #include "Lobby.h"
+#include "GameScene.h"
 
 USING_NS_CC;
 
