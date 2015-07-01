@@ -11,11 +11,16 @@
 
 #include <cocos2d.h>
 #include "CocosGUI.h"
+#include "Grid.h"
+
+class Grid;
 
 class GameScene : public cocos2d::Node {
 public:
     CREATE_FUNC(GameScene);
     
+protected:
+    Grid* grid;
 private:
     bool init() override; // virtual bool init(); in older version
     void onEnter() override;

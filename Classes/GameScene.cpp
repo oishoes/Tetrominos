@@ -30,6 +30,12 @@ void GameScene::onEnter() {
     
     Size visibleSize = Director::getInstance()->getVisibleSize();
     
+    // setup grid
+    grid = Grid::create();
+    grid->setAnchorPoint(Vec2(0.5f,0.0f));
+    grid->setPosition(Vec2(visibleSize.width * 0.5f, 0.1f));
+    this->addChild(grid);
+    
     ui::Button* backButton =  ui::Button::create();
     backButton->setAnchorPoint(Vec2(0.0f, 1.0f));
     backButton->setPosition(Vec2(0.0f, visibleSize.height));
