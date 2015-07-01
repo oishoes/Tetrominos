@@ -10,7 +10,7 @@
 #define __Tetrominos__GameScene__
 
 #include <cocos2d.h>
-
+#include "CocosGUI.h"
 
 class GameScene : public cocos2d::Node {
 public:
@@ -18,7 +18,9 @@ public:
     
 private:
     bool init() override; // virtual bool init(); in older version
+    void onEnter() override;
     
+    void backButtonPressed(cocos2d::Ref* pSender, cocos2d::ui::Widget::TouchEventType eEventType);
 };
 
 #endif /* defined(__Tetrominos__GameScene__) */
