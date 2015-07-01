@@ -1,4 +1,5 @@
 #include "HelloWorldScene.h"
+#include "Lobby.h"
 
 USING_NS_CC;
 
@@ -27,18 +28,9 @@ bool HelloWorld::init()
         return false;
     }
     
-    Size visibleSize = Director::getInstance()->getVisibleSize();
-    Vec2 origin = Director::getInstance()->getVisibleOrigin();
+    Lobby* lobby = Lobby::create();
+    
+    this->addChild(lobby);
     
     return true;
-}
-
-
-void HelloWorld::menuCloseCallback(Ref* pSender)
-{
-    Director::getInstance()->end();
-
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    exit(0);
-#endif
 }
