@@ -7,6 +7,7 @@
 //
 
 #include "Lobby.h"
+#include "SceneManager.h"
 
 using namespace cocos2d;
 // << Standard
@@ -56,7 +57,7 @@ void Lobby::setupUI()
 
 void Lobby::singlePlayerPressed(Ref *pSender, ui::Widget::TouchEventType eEventType) {
     if (eEventType == ui::Widget::TouchEventType::ENDED) {
-        CCLOG("1 Player");
+        SceneManager::getInstance()->enterGameScene(false);
     }
 }
 void Lobby::multiplayerPressed(Ref *pSender, ui::Widget::TouchEventType eEventType) {
