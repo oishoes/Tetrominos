@@ -35,5 +35,35 @@ namespace JSONPacker {
         }
         
         rapidjson::Value& tetrominoDoc = document[typeStr];
-    };
+        
+        rapidjson::Value& colorDoc = tetrominoDoc["color"];
+        
+        int r = colorDoc["r"].GetInt();
+        int g = colorDoc["g"].GetInt();
+        int b = colorDoc["b"].GetInt();
+        
+        Color3B color = Color3B(r, g, b);
+        
+        std::vector<std::vector<Coordinate>> rotations;
+        rapidjson::Value& rotationsDoc = tetrominoDoc["rotations"];
+        for (rapidjson::SizeType rotationsIndex = 0; rotationsIndex < rotationsDoc.Size(); ++rotationsIndex) {
+            
+            std::vector<Coordinate> rotation;
+            rapidjson::Value& rotationDoc = rotationsDoc[rotationsIndex];
+            
+            for (rapidjson::SizeType rotationIndex = 0; rotationIndex < rotationDoc.Size(); ++rotationIndex) {
+                rapidjson::Value& coordinateDoc = rotationDoc[rotationIndex];
+                int x = coordinateDoc["x"].GetInt();
+                int y = coordinateDoc["y"].GetInt();
+                rotation.push_back(Coordinate(x,y));
+            }
+            rotations.push_back(rotation);
+        }
+        
+        TetrominoState state;
+        state.color = color;
+        state.rotations = rotations;
+        
+        return state;
+    }
 }
