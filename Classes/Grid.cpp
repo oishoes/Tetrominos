@@ -16,7 +16,8 @@ bool Grid::init() {
         return false;
     }
     
-    //Tetromino* test = Tetromino::createWithType(TetrominoType::I);
+    Tetromino* test = Tetromino::createWithType(TetrominoType::J);
+    this->addChild(test);
     
     return true;
 }
