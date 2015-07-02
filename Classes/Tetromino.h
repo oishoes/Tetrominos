@@ -24,7 +24,6 @@ private:
     std::vector<std::vector<Coordinate>> rotations;
     
     bool initWithType(TetrominoType type);
-    void onEnter() override;
 };
 
 #endif /* defined(__Tetrominos__Tetromino__) */
