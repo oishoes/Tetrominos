@@ -12,6 +12,8 @@
 
 using namespace cocos2d;
 
+#pragma mark LifeCycle
+
 // << Standard
 bool GameScene::init() {
     if (! Node::init()) {
@@ -42,7 +44,26 @@ void GameScene::onEnter() {
     backButton->loadTextures("backButton.png", "backButtonPressed.png");
     backButton->addTouchEventListener(CC_CALLBACK_2(GameScene::backButtonPressed, this));
     this->addChild(backButton);
+    this->setupTouchHandling();
 }
+
+void GameScene::setupTouchHandling() {
+    auto touchListener = EventListenerTouchOneByOne::create();
+    
+    static Vec2 lastTouchPos;
+    
+    touchListener->onTouchBegan = [&](Touch* touch, Event* event) {
+        return true;
+    };
+    
+    touchListener->onTouchEnded = [&](Touch* touch, Event* event) {
+        grid->rotateActiveTetromino();
+    };
+    
+    this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(touchListener, this);
+}
+
+#pragma mark UIMethods
 
 void GameScene::backButtonPressed(Ref *pSender, ui::Widget::TouchEventType eEventType) {
     if (eEventType == ui::Widget::TouchEventType::ENDED)

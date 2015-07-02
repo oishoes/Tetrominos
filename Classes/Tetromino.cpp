@@ -13,6 +13,9 @@
 
 using namespace cocos2d;
 
+#pragma -
+#pragma LifeCycle
+
 Tetromino* Tetromino::createWithType(TetrominoType type) {
     Tetromino* tetromino = new (std::nothrow) Tetromino();
     
@@ -44,27 +47,56 @@ bool Tetromino::initWithType(TetrominoType type) {
     
     this->color = tetrominoState.color;
     this->rotations = tetrominoState.rotations;
-    this->blocks = std::vector<Sprite*>(4);
+    this->blocks = std::vector<Sprite*>();
+    this->blocks.reserve(4);
+    this->rotationIndex = 0;
     
     float gridSize = float(GRID_SIZE);
     
     Sprite* dummyBlock = Sprite::create("block.png");
-    Size dummySize = dummyBlock->getContentSize();
+    Size dummysize = dummyBlock->getContentSize();
     
-    this->setContentSize(Size(dummySize.width * gridSize, dummySize.height * gridSize));
+    this->setContentSize(Size(dummysize.width * gridSize, dummysize.height * gridSize));
     
-    auto coordinates = rotations[0];
+    auto coordinates = rotations[this->rotationIndex];
     
     for (Coordinate coordinates : coordinates) {
         Sprite* block = Sprite::create("block.png");
         block->setColor(this->color);
         block->setAnchorPoint(Vec2(0.0f, 0.0f));
-        block->setPosition(Vec2(coordinates.x * dummySize.width, coordinates.y * dummySize.height));
+        block->setPosition(Vec2(coordinates.x * dummysize.width, coordinates.y * dummysize.height));
         
         this->addChild(block);
         this->blocks.push_back(block);
     }
     
-    
     return true;
+}
+
+#pragma -
+#pragma Public Methods
+
+void Tetromino::rotate(bool right) {
+    
+    if (right) {
+        rotationIndex++;
+    } else {
+        rotationIndex--;
+    }
+    
+    if (rotationIndex >= (int) rotations.size()) {
+        rotationIndex = 0;
+    } else if (rotationIndex < 0) {
+        rotationIndex = (int) rotations.size() - 1;
+    }
+    
+    auto coordinates = rotations[this->rotationIndex];
+    
+    for (int i = 0; i < GRID_SIZE; ++i) {
+        Sprite* block = blocks[i];
+        Coordinate coordinate = coordinates[i];
+        
+        Size blockSize = block->getContentSize();
+        block->setPosition(Vec2(coordinate.x * blockSize.width, coordinate.y * blockSize.height));
+    }
 }
