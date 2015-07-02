@@ -12,6 +12,7 @@
 #include <cocos2d.h>
 #include "CocosGUI.h"
 #include "Grid.h"
+#include "TetrominoBag.h"
 
 class Grid;
 
@@ -27,6 +28,14 @@ private:
     
     void backButtonPressed(cocos2d::Ref* pSender, cocos2d::ui::Widget::TouchEventType eEventType);
     void setupTouchHandling();
+    
+    void setGameActive(bool active);
+    void step(float dt);
+    bool active;
+    
+    std::unique_ptr<TetrominoBag> tetrominoBag;
+    
+    Tetromino* createRandomTetromino();
 };
 
 #endif /* defined(__Tetrominos__GameScene__) */

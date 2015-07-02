@@ -9,6 +9,7 @@
 #include "Lobby.h"
 #include "GameScene.h"
 #include "SceneManager.h"
+#include "Tetromino.h"
 
 using namespace cocos2d;
 
@@ -22,6 +23,8 @@ bool GameScene::init() {
     
     LayerColor* background = LayerColor::create(Color4B(255,255,255,255));
     this->addChild(background);
+    this->tetrominoBag = std::unique_ptr<TetrominoBag>(new TetrominoBag());
+    this->active = false;
     
     return true;
 }
@@ -38,6 +41,9 @@ void GameScene::onEnter() {
     grid->setPosition(Vec2(visibleSize.width * 0.5f, 0.1f));
     this->addChild(grid);
     
+    Tetromino* randomTest = this->createRandomTetromino();
+    grid->spawnTetromino(randomTest);
+    
     ui::Button* backButton =  ui::Button::create();
     backButton->setAnchorPoint(Vec2(0.0f, 1.0f));
     backButton->setPosition(Vec2(0.0f, visibleSize.height));
@@ -45,6 +51,8 @@ void GameScene::onEnter() {
     backButton->addTouchEventListener(CC_CALLBACK_2(GameScene::backButtonPressed, this));
     this->addChild(backButton);
     this->setupTouchHandling();
+    
+    this->setGameActive(true);
 }
 
 void GameScene::setupTouchHandling() {
@@ -70,4 +78,33 @@ void GameScene::backButtonPressed(Ref *pSender, ui::Widget::TouchEventType eEven
     {
         SceneManager::getInstance()->returnToLobby();
     }
+}
+
+#pragma mark Public Methods
+
+Tetromino* GameScene::createRandomTetromino() {
+    
+    TetrominoType tetrominoType = tetrominoBag->getTetromino();
+    
+    Tetromino* newTetromino = Tetromino::createWithType(tetrominoType);
+    
+    return newTetromino;
+}
+
+
+#pragma mark Private Methods
+void GameScene::setGameActive(bool active) {
+    this->active = active;
+    
+    if (this->active) {
+        this->schedule(CC_SCHEDULE_SELECTOR(GameScene::step), INITIAL_STEP_INTERVAL);
+        
+    } else {
+        this->unschedule(CC_SCHEDULE_SELECTOR(GameScene::step));
+        
+    }
+}
+
+void GameScene::step(float dt) {
+    this->grid->step();
 }

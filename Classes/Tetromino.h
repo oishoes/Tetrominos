@@ -13,14 +13,16 @@
 #include "Constants.h"
 #include "Coordinate.h"
 
-
 class Tetromino : public cocos2d::Node {
     
 public:
     static Tetromino* createWithType(TetrominoType type);
     
     void rotate(bool right);
+    int getHighestYCoodinate();
+    int getHighestXCoodinate();
     
+    int getWidthInBlocks();
 private:
     TetrominoType type;
     cocos2d::Color3B color;
