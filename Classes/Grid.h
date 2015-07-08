@@ -25,14 +25,19 @@ public:
     void step();
     
     Coordinate getActiveTetrominoCoodinate();
-private:
+    
+    cocos2d::Size getBlockSize();
+    
+    Tetromino* getActiveTetromino();
+
+    void setActiveTetrominoCoodinate(Coordinate coordinate);
+protected:
     Tetromino* activeTetromino;
     // Grid shouldn't be worring about grid stuff
     Coordinate activeTetrominoCoordinate;
     
     bool init() override;
     void onEnter() override;
-    void setActiveTetrominoCoodinate(Coordinate coordinate);
     
     cocos2d::Vec2 convertCoordinateToPosition(Coordinate coordinate);
     

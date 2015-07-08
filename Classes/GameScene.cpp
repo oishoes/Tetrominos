@@ -58,14 +58,60 @@ void GameScene::onEnter() {
 void GameScene::setupTouchHandling() {
     auto touchListener = EventListenerTouchOneByOne::create();
     
+    static Vec2 firstTouchPos;
     static Vec2 lastTouchPos;
+    //static bool allowRotate = true;
     
     touchListener->onTouchBegan = [&](Touch* touch, Event* event) {
+        firstTouchPos = this-> convertTouchToNodeSpace(touch);
+        lastTouchPos = firstTouchPos;
         return true;
     };
     
+    touchListener->onTouchMoved = [&](Touch* touch, Event* event) {
+        Vec2 touchPos = this->convertTouchToNodeSpace(touch);
+        Vec2 difference = touchPos - lastTouchPos;
+        
+        Tetromino* activeTetromino = grid->getActiveTetromino();
+        
+        if (activeTetromino) {
+            Coordinate touchCoordinate = this->convertPositionToCoodinate(touchPos);
+            Coordinate differenceCoordinate = this->convertPositionToCoodinate(difference);
+            Coordinate activeTetrominoCoodinate = grid->getActiveTetrominoCoodinate();
+            
+            if (abs(differenceCoordinate.x) >= 1) {
+                Coordinate newTetrominoCoodinate;
+                bool movingRight = (differenceCoordinate.x > 0);
+                
+                newTetrominoCoodinate =
+                Coordinate(activeTetrominoCoodinate.x + (movingRight ? 1 : -1), activeTetrominoCoodinate.y);
+                /*
+                if (differenceCoordinate.x > 0) {
+                    // move right
+                    newTetrominoCoodinate = Coordinate(activeTetrominoCoodinate.x - 1, activeTetrominoCoodinate.y);
+                } else {
+                    // move left
+                    newTetrominoCoodinate = Coordinate(activeTetrominoCoodinate.x + 1, activeTetrominoCoodinate.y);
+                }
+                 */
+                
+                grid->setActiveTetrominoCoodinate(newTetrominoCoodinate);
+                //allowRotate = false;
+                lastTouchPos = touchPos;
+            }
+        }
+    };
+    
     touchListener->onTouchEnded = [&](Touch* touch, Event* event) {
-        grid->rotateActiveTetromino();
+        Vec2 touchEndPos = this->convertTouchToNodeSpace(touch);
+        
+        float distance = touchEndPos.distance(firstTouchPos);
+        
+        Size blockSize = this->grid->getBlockSize();
+        
+        if (distance < blockSize.width) { // && allowRotate
+            grid->rotateActiveTetromino();
+        }
     };
     
     this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(touchListener, this);
@@ -107,4 +153,12 @@ void GameScene::setGameActive(bool active) {
 
 void GameScene::step(float dt) {
     this->grid->step();
+}
+
+#pragma mark Utility Methods
+
+Coordinate GameScene::convertPositionToCoodinate(Vec2 position) {
+    Size blockSize = this->grid->getBlockSize();
+    
+    return Coordinate(position.x / blockSize.width, position.y * blockSize.height);
 }

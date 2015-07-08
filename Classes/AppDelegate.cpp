@@ -58,7 +58,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
         searchResolutionsOrder[0] = "resources-3x";
     } else {
         searchResolutionsOrder[0] = "resources-4x";
-        searchResolutionsOrder[1] = "resources-3x"; // when cocos couldnt find
+        searchResolutionsOrder[1] = "resources-3x"; // incase cocos couldnt find the 4x resources
     }
     
     FileUtils::getInstance()->setSearchResolutionsOrder(searchResolutionsOrder);

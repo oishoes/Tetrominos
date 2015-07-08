@@ -22,7 +22,6 @@ public:
     
 protected:
     Grid* grid;
-private:
     bool init() override; // virtual bool init(); in older version
     void onEnter() override;
     
@@ -32,6 +31,10 @@ private:
     void setGameActive(bool active);
     void step(float dt);
     bool active;
+    
+    Coordinate convertPositionToCoodinate(cocos2d::Vec2 position);
+    
+    Coordinate touchCoordinate;
     
     std::unique_ptr<TetrominoBag> tetrominoBag;
     

@@ -67,6 +67,12 @@ void Grid::step () {
     this->setActiveTetrominoCoodinate(nextCoodinate);
 }
 
+Size Grid::getBlockSize() {
+    Size contentSize = this->getContentSize();
+    Size blockSize(contentSize.width / float(GRID_WIDTH), contentSize.height /float(GRID_HEIGHT));
+    return blockSize;
+}
+
 #pragma mark PrivateMethods
 
 Vec2 Grid::convertCoordinateToPosition(Coordinate coordinate) {
@@ -89,4 +95,9 @@ void Grid::setActiveTetrominoCoodinate(Coordinate coordinate) {
         activeTetromino->setPosition(this->convertCoordinateToPosition(activeTetrominoCoordinate));
         
     }
+}
+
+
+Tetromino* Grid::getActiveTetromino() {
+    return activeTetromino;
 }
