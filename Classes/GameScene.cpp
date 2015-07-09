@@ -42,9 +42,6 @@ void GameScene::onEnter() {
     grid->setPosition(Vec2(visibleSize.width * 0.5f, 0.1f));
     this->addChild(grid);
     
-    Tetromino* randomTest = this->createRandomTetromino();
-    grid->spawnTetromino(randomTest);
-    
     ui::Button* backButton =  ui::Button::create();
     backButton->setAnchorPoint(Vec2(0.0f, 1.0f));
     backButton->setPosition(Vec2(0.0f, visibleSize.height));
@@ -65,7 +62,7 @@ void GameScene::setupTouchHandling() {
     static std::clock_t touchStartedTime;
     
     touchListener->onTouchBegan = [&](Touch* touch, Event* event) {
-        firstTouchPos = this-> convertTouchToNodeSpace(touch);
+        firstTouchPos = this->convertTouchToNodeSpace(touch);
         lastTouchPos = firstTouchPos;
         touchStartedTime = clock();
         allowRotate = true;
@@ -177,7 +174,15 @@ void GameScene::setGameActive(bool active) {
 }
 
 void GameScene::step(float dt) {
-    this->grid->step();
+    
+    Tetromino* activeTetromino = grid->getActiveTetromino();
+    if(!activeTetromino) {
+        Tetromino* newTetroino = this->createRandomTetromino();
+        this->grid->spawnTetromino(newTetroino);
+    } else {
+        this->grid->step();
+    }
+    
 }
 
 #pragma mark Utility Methods
