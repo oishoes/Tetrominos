@@ -118,18 +118,25 @@ int Tetromino::getHighestYCoodinate() {
 }
 
 int Tetromino::getWidthInBlocks() {
+    auto coordinates = rotations[rotationIndex];
     
-    int minX = GRID_SIZE;
-    int maxX = 0;
+    int rightMost = 0;
+    int leftMost = GRID_SIZE;
     
-    auto coordinates = rotations[this->rotationIndex];
-    
-    for (Coordinate coordinate : coordinates) {
-        maxX = MAX(coordinate.x, maxX);
-        minX = MIN(coordinate.x, minX);
+    for (Coordinate coordinate : coordinates)
+    {
+        if (coordinate.x < leftMost)
+        {
+            leftMost = coordinate.x;
+        }
+        
+        if (coordinate.x > rightMost)
+        {
+            rightMost = coordinate.x;
+        }
     }
     
-    return maxX - minX + 1;
+    return rightMost - leftMost + 1;
 }
 
 //int Tetromino::getHighestXCoodinate() {

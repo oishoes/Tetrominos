@@ -113,7 +113,8 @@ bool Grid::checkIfTetrominoCollides(Tetromino *tetromino, Coordinate tetrominoCo
         Coordinate gridCoordinate = Coordinate::add(tetrominoCoordinate, localCoordinate);
         
         if (gridCoordinate.x < 0 || gridCoordinate.y < 0
-            || gridCoordinate.x > GRID_WIDTH || gridCoordinate.y > GRID_HEIGHT) {
+            || gridCoordinate.x >= GRID_WIDTH || gridCoordinate.y > GRID_HEIGHT) {
+            
             return true;
         }
     }
