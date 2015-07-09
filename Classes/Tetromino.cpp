@@ -58,7 +58,7 @@ bool Tetromino::initWithType(TetrominoType type) {
     
     this->setContentSize(Size(dummysize.width * gridSize, dummysize.height * gridSize));
     
-    auto coordinates = rotations[this->rotationIndex];
+    auto coordinates = this->getCurrentRotation();
     
     for (Coordinate coordinates : coordinates) {
         Sprite* block = Sprite::create("block.png");
@@ -93,7 +93,7 @@ void Tetromino::rotate(bool right) {
     //this->getHighestYCoodinate();
     //this->getWidthInBlocks();
     
-    auto coordinates = rotations[this->rotationIndex];
+    auto coordinates = this->getCurrentRotation();
     
     for (int i = 0; i < GRID_SIZE; ++i) {
         Sprite* block = blocks[i];
@@ -106,7 +106,7 @@ void Tetromino::rotate(bool right) {
 
 int Tetromino::getHighestYCoodinate() {
     
-    auto coordinates = rotations[this->rotationIndex];
+    auto coordinates = this->getCurrentRotation();
     
     int highest = 0;
     for (Coordinate coordinate : coordinates) {
@@ -118,7 +118,7 @@ int Tetromino::getHighestYCoodinate() {
 }
 
 int Tetromino::getWidthInBlocks() {
-    auto coordinates = rotations[rotationIndex];
+    auto coordinates = this->getCurrentRotation();
     
     int rightMost = 0;
     int leftMost = GRID_SIZE;
@@ -143,7 +143,7 @@ int Tetromino::getWidthInBlocks() {
 //}
 
 int Tetromino::getMinimumXCoodinate() {
-    auto coordinates = rotations[this->rotationIndex];
+    auto coordinates = this->getCurrentRotation();
     
     int leftMost = GRID_SIZE;
     for (Coordinate coordinate : coordinates) {
@@ -161,7 +161,7 @@ std::vector<int> Tetromino::getSkirt() {
     
     std::vector<int> skirt = std::vector<int> (width, GRID_SIZE - 1);
     
-    auto coordinates = rotations[this->rotationIndex];
+    auto coordinates = this->getCurrentRotation();
     
     for (Coordinate coordinate : coordinates) {
         int x = coordinate.x - skirtStart;
@@ -172,4 +172,12 @@ std::vector<int> Tetromino::getSkirt() {
         }
     }
     return skirt;
+}
+
+std::vector<Sprite*> Tetromino::getBlocks() {
+    return this->blocks;
+}
+
+std::vector<Coordinate> Tetromino::getCurrentRotation() {
+    return rotations[rotationIndex];
 }

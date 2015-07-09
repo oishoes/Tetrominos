@@ -22,9 +22,11 @@ public:
     int getHighestYCoodinate();
     int getHighestXCoodinate();
     int getMinimumXCoodinate();
-    std::vector<int> getSkirt();
-    
     int getWidthInBlocks();
+    std::vector<int> getSkirt();
+    std::vector<cocos2d::Sprite*> getBlocks();
+    std::vector<Coordinate> getCurrentRotation();
+    
 private:
     TetrominoType type;
     cocos2d::Color3B color;

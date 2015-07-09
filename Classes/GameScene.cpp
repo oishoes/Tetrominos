@@ -83,7 +83,7 @@ void GameScene::setupTouchHandling() {
             Coordinate differenceCoordinate = this->convertPositionToCoodinate(difference);
             Coordinate activeTetrominoCoodinate = grid->getActiveTetrominoCoodinate();
             
-            if (differenceCoordinate.y <= -1) {
+            if (differenceCoordinate.y <= -1000) {
                 Coordinate newTetrominoCoodinate = Coordinate(activeTetrominoCoodinate.x, activeTetrominoCoodinate.y -1);
                 grid->setActiveTetrominoCoodinate(newTetrominoCoodinate);
                 
@@ -133,6 +133,7 @@ void GameScene::setupTouchHandling() {
             float velocity = fabsf(difference.y / touchDuration);
             
             if (velocity > DROP_VELOCITY) {
+                // TODO: Implement tetromino dropping
                 CCLOG("DROP! %f", velocity);
             }
         }
