@@ -22,6 +22,7 @@ public:
     void spawnTetromino(Tetromino* tetromino);
     void rotateActiveTetromino();
     void step();
+    void dropActiveTetromino();
     
     Coordinate getActiveTetrominoCoodinate();
     
@@ -45,6 +46,8 @@ private:
     bool checkIfTetrominoCollides(Tetromino* tetromino, Coordinate tetrominoCoordinate);
     void deactivateTetromino(Tetromino* tetromino, Coordinate tetrominoCoordinate);
     void placeTetrominoOnBoard (Tetromino* tetromino, Coordinate tetrominoCoordinate);
+    Coordinate getTetrominoLandingCoodinate();
+    void clearLines();
 };
 
 #endif /* defined(__Tetrominos__Grid__) */

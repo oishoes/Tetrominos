@@ -86,6 +86,15 @@ Size Grid::getBlockSize() {
     return blockSize;
 }
 
+void Grid::dropActiveTetromino() {
+    if (this->getActiveTetromino()) {
+        Coordinate landingCoordinate = this->getTetrominoLandingCoodinate();
+        
+        this->setActiveTetrominoCoodinate(landingCoordinate);
+        this->deactivateTetromino(activeTetromino, activeTetrominoCoordinate);
+    }
+}
+
 #pragma mark PrivateMethods
 
 Vec2 Grid::convertCoordinateToPosition(Coordinate coordinate) {
@@ -116,23 +125,24 @@ Tetromino* Grid::getActiveTetromino() {
 
 bool Grid::checkIfTetrominoCollides(Tetromino *tetromino, Coordinate tetrominoCoordinate) {
     
-    int skirtStart = tetromino->getMinimumXCoodinate();
-    std::vector<int> skirt = tetromino->getSkirt();
-    
-    for (int index = 0; index < skirt.size(); ++index) {
-        Coordinate localCoordinate = Coordinate(index + skirtStart, skirt[index]);
-        Coordinate gridCoordinate = Coordinate::add(tetrominoCoordinate, localCoordinate);
+    if (activeTetromino) {
+        int skirtStart = tetromino->getMinimumXCoodinate();
+        std::vector<int> skirt = tetromino->getSkirt();
         
-        if (gridCoordinate.x < 0 || gridCoordinate.y < 0
-            || gridCoordinate.x >= GRID_WIDTH || gridCoordinate.y > GRID_HEIGHT) {
+        for (int index = 0; index < skirt.size(); ++index) {
+            Coordinate localCoordinate = Coordinate(index + skirtStart, skirt[index]);
+            Coordinate gridCoordinate = Coordinate::add(tetrominoCoordinate, localCoordinate);
             
-            return true;
-        }
-        if (blocksLanded[gridCoordinate.y][gridCoordinate.x]) {
-            return true;
+            if (gridCoordinate.x < 0 || gridCoordinate.y < 0
+                || gridCoordinate.x >= GRID_WIDTH || gridCoordinate.y > GRID_HEIGHT) {
+                
+                return true;
+            }
+            if (blocksLanded[gridCoordinate.y][gridCoordinate.x]) {
+                return true;
+            }
         }
     }
-    
     return false;
 }
 
@@ -142,6 +152,8 @@ void Grid::deactivateTetromino(Tetromino* tetromino, Coordinate tetrominoCoordin
     this->activeTetromino->removeFromParent();
     
     this->activeTetromino = nullptr;
+    
+    this->clearLines();
     
 }
 
@@ -174,6 +186,62 @@ void Grid::placeTetrominoOnBoard(Tetromino* tetromino, Coordinate tetrominoCoord
         
         // add the block to blocksLanded
         blocksLanded[globalCoordinate.y][globalCoordinate.x] = block;
+    }
+}
+
+Coordinate Grid::getTetrominoLandingCoodinate() {
+    
+    bool collided = false;
+    Coordinate landingCoordinate = this->getActiveTetrominoCoodinate();
+    
+    while (!collided) {
+        landingCoordinate.y--;
+        if (this->checkIfTetrominoCollides(activeTetromino, landingCoordinate)) {
+            landingCoordinate.y++;
+            collided = true;
+        }
+    }
+    return landingCoordinate;
+}
+
+void Grid::clearLines() {
+    for (int y = 0; y < GRID_HEIGHT; ++y) {
+        // check the line if filled
+        bool fullLine = true;
+        std::vector<Sprite*> row = blocksLanded[y];
         
+        for (int x = 0; x < GRID_HEIGHT; ++x) {
+            if (!row[x]) {
+                fullLine = false;
+                break;
+            }
+        }
+        
+        // clear the line if filled
+        if (fullLine) {
+            // remove the block sprites from grid and blocksLanded
+            for (Sprite* block : row) {
+                block->removeFromParent();
+            }
+            
+            blocksLanded.erase(blocksLanded.begin() + y);
+        
+        
+            // move blocks in all rows above down one y coordinate
+            std::vector<std::vector<Sprite*>> rowsToMoveDown(blocksLanded.begin() + y, blocksLanded.end());
+            for (std::vector<Sprite*> rowAbove : rowsToMoveDown) {
+                for (Sprite* block : rowAbove) {
+                    if (block) {
+                        block->setPositionY(block->getPosition().y - block->getContentSize().height);
+                    }
+                }
+            }
+            
+            std::vector<Sprite*> newRow(GRID_WIDTH, nullptr);
+            blocksLanded.push_back(newRow);
+            
+            // to check the new decremented line
+            y--;
+        }
     }
 }

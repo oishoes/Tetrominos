@@ -92,15 +92,6 @@ void GameScene::setupTouchHandling() {
                 
                 newTetrominoCoodinate =
                 Coordinate(activeTetrominoCoodinate.x + (movingRight ? 1 : -1), activeTetrominoCoodinate.y);
-                /*
-                if (differenceCoordinate.x > 0) {
-                    // move right
-                    newTetrominoCoodinate = Coordinate(activeTetrominoCoodinate.x - 1, activeTetrominoCoodinate.y);
-                } else {
-                    // move left
-                    newTetrominoCoodinate = Coordinate(activeTetrominoCoodinate.x + 1, activeTetrominoCoodinate.y);
-                }
-                 */
                 
                 grid->setActiveTetrominoCoodinate(newTetrominoCoodinate);
                 lastTouchPos = touchPos;
@@ -118,7 +109,7 @@ void GameScene::setupTouchHandling() {
         if (distance < blockSize.width && allowRotate) {
             grid->rotateActiveTetromino();
         } else {
-        
+            
             Vec2 difference = touchEndPos - firstTouchPos;
             std::clock_t clockDifference = clock() - touchStartedTime;
             
@@ -130,8 +121,7 @@ void GameScene::setupTouchHandling() {
             float velocity = fabsf(difference.y / touchDuration);
             
             if (velocity > DROP_VELOCITY) {
-                // TODO: Implement tetromino dropping
-                CCLOG("DROP! %f", velocity);
+                grid->dropActiveTetromino();
             }
         }
     };
