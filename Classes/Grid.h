@@ -14,7 +14,6 @@
 #include "Constants.h"
 
 class Tetromino;
-//class Coordinate;
 
 class Grid : public cocos2d::Sprite {
 public:
@@ -31,7 +30,7 @@ public:
     Tetromino* getActiveTetromino();
 
     void setActiveTetrominoCoodinate(Coordinate coordinate);
-protected:
+private:
     Tetromino* activeTetromino;
     // Grid shouldn't be worring about grid stuff
     Coordinate activeTetrominoCoordinate;
@@ -41,6 +40,7 @@ protected:
     
     cocos2d::Vec2 convertCoordinateToPosition(Coordinate coordinate);
     
+    bool checkIfTetrominoCollides(Tetromino* tetromino, Coordinate tetrominoCoordinate);
 };
 
 #endif /* defined(__Tetrominos__Grid__) */

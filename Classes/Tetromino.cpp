@@ -132,6 +132,37 @@ int Tetromino::getWidthInBlocks() {
     return maxX - minX + 1;
 }
 
-int Tetromino::getHighestXCoodinate() {
+//int Tetromino::getHighestXCoodinate() {
+//}
+
+int Tetromino::getMinimumXCoodinate() {
+    auto coordinates = rotations[this->rotationIndex];
     
+    int leftMost = GRID_SIZE;
+    for (Coordinate coordinate : coordinates) {
+        if (coordinate.x < leftMost) {
+            leftMost = coordinate.x;
+        }
+    }
+    
+    return leftMost;
+}
+
+std::vector<int> Tetromino::getSkirt() {
+    int width = getWidthInBlocks();
+    int skirtStart = getMinimumXCoodinate();
+    
+    std::vector<int> skirt = std::vector<int> (width, GRID_SIZE - 1);
+    
+    auto coordinates = rotations[this->rotationIndex];
+    
+    for (Coordinate coordinate : coordinates) {
+        int x = coordinate.x - skirtStart;
+        int skirtY = skirt[x];
+        
+        if (coordinate.y < skirtY) {
+            skirt[x] = coordinate.y;
+        }
+    }
+    return skirt;
 }

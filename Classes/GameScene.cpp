@@ -21,7 +21,7 @@ bool GameScene::init() {
         return false;
     }
     
-    LayerColor* background = LayerColor::create(Color4B(255,255,255,255));
+    LayerColor* background = LayerColor::create(Color4B(0,0,0,255));
     this->addChild(background);
     this->tetrominoBag = std::unique_ptr<TetrominoBag>(new TetrominoBag());
     this->active = false;

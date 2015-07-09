@@ -10,11 +10,10 @@
 
 TetrominoBag::TetrominoBag() :
 bag(std::vector<TetrominoType>()),
-randomGenerator(std::default_random_engine((unsigned int) time(0))) {
-    
-}
+randomGenerator(std::default_random_engine((unsigned int) time(0))) {}
 
 TetrominoType TetrominoBag::getTetromino() {
+    
     if (this->bag.empty()) {
         this->bag.push_back(TetrominoType::I);
         this->bag.push_back(TetrominoType::O);
@@ -28,6 +27,7 @@ TetrominoType TetrominoBag::getTetromino() {
     std::shuffle(bag.begin(), bag.end(), randomGenerator);
     
     TetrominoType retValue = this->bag.back();
+    
     this->bag.pop_back();
     
     return retValue;
