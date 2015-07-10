@@ -25,6 +25,7 @@ protected:
     cocos2d::ui::Text* scoreLabel;
     int totalScore;
     bool active;
+    float stepInterval;
     
     // Lifecycle
     bool init() override; // virtual bool init(); in older version
@@ -36,12 +37,14 @@ protected:
     void setGameActive(bool active);
     void step(float dt);
     void updateScoreStateFromScore();
-    void updateScoreLabel(int score);
+    void updateGameSpeed(int score);
     
     // Utility
     Coordinate convertPositionToCoodinate(cocos2d::Vec2 position);
     Coordinate touchCoordinate;
     
+    // UI
+    void updateScoreLabel(int score);
     void backButtonPressed(cocos2d::Ref* pSender, cocos2d::ui::Widget::TouchEventType eEventType);
     std::unique_ptr<TetrominoBag> tetrominoBag;
     
