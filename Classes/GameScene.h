@@ -38,6 +38,7 @@ protected:
     void step(float dt);
     void updateScoreStateFromScore();
     void updateGameSpeed(int score);
+    void gameOver();
     
     // Utility
     Coordinate convertPositionToCoodinate(cocos2d::Vec2 position);

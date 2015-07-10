@@ -121,6 +121,17 @@ int Grid::getTotalLinesCleared() {
     return this->totalLinesCleared;
 }
 
+bool Grid::checkIfTopReached() {
+    
+    for (Sprite* block : blocksLanded.back()) {
+        if (block) {
+            return true;
+        }
+    }
+    
+    return false;
+}
+
 #pragma mark PrivateMethods
 
 Vec2 Grid::convertCoordinateToPosition(Coordinate coordinate) {
