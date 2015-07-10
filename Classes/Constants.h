@@ -19,7 +19,6 @@ static const float INITIAL_STEP_INTERVAL = 1.f;
 
 static const float DROP_VELOCITY = 10000.f;
 
-
 // struct, enum or class?
 // specify the exact number of each type
 enum class TetrominoType {

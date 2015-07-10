@@ -22,23 +22,29 @@ public:
     
 protected:
     Grid* grid;
-    bool init() override; // virtual bool init(); in older version
-    void onEnter() override;
-    
-    void backButtonPressed(cocos2d::Ref* pSender, cocos2d::ui::Widget::TouchEventType eEventType);
-    void setupTouchHandling();
-    
-    void setGameActive(bool active);
-    void step(float dt);
+    cocos2d::ui::Text* scoreLabel;
+    int totalScore;
     bool active;
     
-    Coordinate convertPositionToCoodinate(cocos2d::Vec2 position);
+    // Lifecycle
+    bool init() override; // virtual bool init(); in older version
+    void onEnter() override;
+    void setupTouchHandling();
     
+    // Game Logic
+    Tetromino* createRandomTetromino();
+    void setGameActive(bool active);
+    void step(float dt);
+    void updateScoreStateFromScore();
+    void updateScoreLabel(int score);
+    
+    // Utility
+    Coordinate convertPositionToCoodinate(cocos2d::Vec2 position);
     Coordinate touchCoordinate;
     
+    void backButtonPressed(cocos2d::Ref* pSender, cocos2d::ui::Widget::TouchEventType eEventType);
     std::unique_ptr<TetrominoBag> tetrominoBag;
     
-    Tetromino* createRandomTetromino();
 };
 
 #endif /* defined(__Tetrominos__GameScene__) */

@@ -8,6 +8,7 @@
 
 #include "Grid.h"
 #include "Tetromino.h"
+#include "UIConstants.h"
 
 using namespace cocos2d;
 
@@ -20,6 +21,9 @@ bool Grid::init() {
     
     this->activeTetromino = nullptr;
     this->activeTetrominoCoordinate = Coordinate();
+    
+    this->score = 0;
+    this->totalLinesCleared = 0;
     
     for (int index = 0; index < GRID_HEIGHT; ++index) {
         std::vector<Sprite*> row(GRID_WIDTH, nullptr);
@@ -44,7 +48,11 @@ void Grid::rotateActiveTetromino() {
         
         if (this->checkIfTetrominoCollides(activeTetromino, activeTetrominoCoordinate)) {
             this->activeTetromino->rotate(false);
+        } else {
+            ghostTetromino->rotate(true);
+            this->updateGhostTetrominoPosition();
         }
+    
     }
 }
 
@@ -65,6 +73,16 @@ void Grid::spawnTetromino(Tetromino* tetromino) {
     
     this->activeTetromino->setPosition(spawnPosition);
     this->addChild(this->activeTetromino);
+    
+    // add ghos
+    TetrominoType type = tetromino->getTetrominoType();
+    this->ghostTetromino = Tetromino::createWithType(type);
+    
+    this->ghostTetromino->setCascadeOpacityEnabled(true);
+    this->ghostTetromino->setOpacity(GHOST_TETROMINO_OPACITY);
+    this->updateGhostTetrominoPosition();
+    
+    this->addChild(this->ghostTetromino);
 }
 
 void Grid::step () {
@@ -95,6 +113,14 @@ void Grid::dropActiveTetromino() {
     }
 }
 
+int Grid::getScore() {
+    return this->score;
+}
+
+int Grid::getTotalLinesCleared() {
+    return this->totalLinesCleared;
+}
+
 #pragma mark PrivateMethods
 
 Vec2 Grid::convertCoordinateToPosition(Coordinate coordinate) {
@@ -116,6 +142,8 @@ void Grid::setActiveTetrominoCoodinate(Coordinate coordinate) {
             activeTetrominoCoordinate = coordinate;
             activeTetromino->setPosition(this->convertCoordinateToPosition(activeTetrominoCoordinate));
         }
+    
+        this->updateGhostTetrominoPosition();
     }
 }
 
@@ -150,8 +178,10 @@ void Grid::deactivateTetromino(Tetromino* tetromino, Coordinate tetrominoCoordin
     this->placeTetrominoOnBoard(tetromino, tetrominoCoordinate);
     
     this->activeTetromino->removeFromParent();
-    
     this->activeTetromino = nullptr;
+    
+    this->ghostTetromino->removeFromParent();
+    this->ghostTetromino  = nullptr;
     
     this->clearLines();
     
@@ -205,12 +235,15 @@ Coordinate Grid::getTetrominoLandingCoodinate() {
 }
 
 void Grid::clearLines() {
+    
+    int linesCleared = 0;
+    
     for (int y = 0; y < GRID_HEIGHT; ++y) {
         // check the line if filled
         bool fullLine = true;
         std::vector<Sprite*> row = blocksLanded[y];
         
-        for (int x = 0; x < GRID_HEIGHT; ++x) {
+        for (int x = 0; x < GRID_WIDTH; ++x) {
             if (!row[x]) {
                 fullLine = false;
                 break;
@@ -237,6 +270,8 @@ void Grid::clearLines() {
                 }
             }
             
+            linesCleared++;
+            
             std::vector<Sprite*> newRow(GRID_WIDTH, nullptr);
             blocksLanded.push_back(newRow);
             
@@ -244,4 +279,26 @@ void Grid::clearLines() {
             y--;
         }
     }
+
+    totalLinesCleared += linesCleared;
+    this->updateScore(linesCleared);
+    
+    CCLOG("%d", totalLinesCleared);
+    CCLOG("%d", this->score);
+}
+
+void Grid::updateGhostTetrominoPosition() {
+    if (ghostTetromino) {
+        Coordinate landingCoordinate = this->getTetrominoLandingCoodinate();
+        ghostTetromino->setPosition(this->convertCoordinateToPosition(landingCoordinate));
+    }
+}
+
+void Grid::updateScore(int linesCleared) {
+    int scoreToAdd = linesCleared;
+    // if TETROMINO! override
+    if (linesCleared == 4) {
+        scoreToAdd = 5;
+    }
+    this->score += scoreToAdd;
 }

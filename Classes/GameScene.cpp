@@ -11,6 +11,7 @@
 #include "SceneManager.h"
 #include "Tetromino.h"
 #include "time.h"
+#include "UIConstants.h"
 
 using namespace cocos2d;
 
@@ -22,10 +23,11 @@ bool GameScene::init() {
         return false;
     }
     
-    LayerColor* background = LayerColor::create(Color4B(0,0,0,255));
+    LayerColor* background = LayerColor::create(Color4B(255,255,255,255));
     this->addChild(background);
     this->tetrominoBag = std::unique_ptr<TetrominoBag>(new TetrominoBag());
     this->active = false;
+    this->totalScore = 0;
     
     return true;
 }
@@ -48,6 +50,15 @@ void GameScene::onEnter() {
     backButton->loadTextures("backButton.png", "backButtonPressed.png");
     backButton->addTouchEventListener(CC_CALLBACK_2(GameScene::backButtonPressed, this));
     this->addChild(backButton);
+    
+    // setup labels
+    this->scoreLabel = ui::Text::create("0", FONT_NAME, FONT_SIZE);
+    
+    this->scoreLabel->setAnchorPoint(Vec2(0.5f,1.0f));
+    this->scoreLabel->setColor(LABEL_COLOR);
+    this->scoreLabel->setPosition(Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.95f));
+    this->addChild(this->scoreLabel);
+    
     this->setupTouchHandling();
     
     this->setGameActive(true);
@@ -122,6 +133,7 @@ void GameScene::setupTouchHandling() {
             
             if (velocity > DROP_VELOCITY) {
                 grid->dropActiveTetromino();
+                this->updateScoreStateFromScore();
             }
         }
     };
@@ -136,6 +148,11 @@ void GameScene::backButtonPressed(Ref *pSender, ui::Widget::TouchEventType eEven
     {
         SceneManager::getInstance()->returnToLobby();
     }
+}
+
+void GameScene::updateScoreLabel(int score) {
+    std::string scoreString = StringUtils::toString(score);
+    this->scoreLabel->setString(scoreString);
 }
 
 #pragma mark Public Methods
@@ -171,8 +188,17 @@ void GameScene::step(float dt) {
         this->grid->spawnTetromino(newTetroino);
     } else {
         this->grid->step();
+        this->updateScoreStateFromScore();
     }
     
+}
+
+void GameScene::updateScoreStateFromScore() {
+    int newScore = this->grid->getScore();
+    if (newScore > this->totalScore) {
+        this->totalScore = newScore;
+        this->updateScoreLabel(newScore);
+    }
 }
 
 #pragma mark Utility Methods

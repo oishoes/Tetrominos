@@ -31,8 +31,13 @@ public:
     Tetromino* getActiveTetromino();
 
     void setActiveTetrominoCoodinate(Coordinate coordinate);
+    
+    int getTotalLinesCleared();
+    int getScore();
+    
 private:
     Tetromino* activeTetromino;
+    Tetromino* ghostTetromino;
     // Grid shouldn't be worring about grid stuff
     Coordinate activeTetrominoCoordinate;
     
@@ -41,6 +46,9 @@ private:
     bool init() override;
     void onEnter() override;
     
+    int score;
+    int totalLinesCleared;
+    
     cocos2d::Vec2 convertCoordinateToPosition(Coordinate coordinate);
     
     bool checkIfTetrominoCollides(Tetromino* tetromino, Coordinate tetrominoCoordinate);
@@ -48,6 +56,10 @@ private:
     void placeTetrominoOnBoard (Tetromino* tetromino, Coordinate tetrominoCoordinate);
     Coordinate getTetrominoLandingCoodinate();
     void clearLines();
+    
+    void updateGhostTetrominoPosition();
+    
+    void updateScore(int linesCleared);
 };
 
 #endif /* defined(__Tetrominos__Grid__) */

@@ -75,6 +75,9 @@ bool Tetromino::initWithType(TetrominoType type) {
 
 #pragma -
 #pragma Public Methods
+TetrominoType Tetromino::getTetrominoType() {
+    return this->type;
+}
 
 void Tetromino::rotate(bool right) {
     

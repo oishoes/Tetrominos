@@ -19,6 +19,8 @@ public:
     static Tetromino* createWithType(TetrominoType type);
     
     void rotate(bool right);
+    
+    TetrominoType getTetrominoType();
     int getHighestYCoodinate();
     int getHighestXCoodinate();
     int getMinimumXCoodinate();
