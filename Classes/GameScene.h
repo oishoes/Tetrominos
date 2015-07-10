@@ -23,9 +23,11 @@ public:
 protected:
     Grid* grid;
     cocos2d::ui::Text* scoreLabel;
+    cocos2d::ui::Text* timeLeftLabel;
     int totalScore;
     bool active;
     float stepInterval;
+    float timeLeft;
     
     // Lifecycle
     bool init() override; // virtual bool init(); in older version
@@ -36,6 +38,7 @@ protected:
     Tetromino* createRandomTetromino();
     void setGameActive(bool active);
     void step(float dt);
+    void update(float dt) override;
     void updateScoreStateFromScore();
     void updateGameSpeed(int score);
     void gameOver();
@@ -46,6 +49,7 @@ protected:
     
     // UI
     void updateScoreLabel(int score);
+    void updateTimeLeftLabel(float time);
     void backButtonPressed(cocos2d::Ref* pSender, cocos2d::ui::Widget::TouchEventType eEventType);
     std::unique_ptr<TetrominoBag> tetrominoBag;
     

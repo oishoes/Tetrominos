@@ -24,6 +24,8 @@ static const float  SPEED_MAX = 0.1f;
 
 static const float  DROP_VELOCITY = 10000.f;
 
+static const float TIME_PER_GAME = 120.0f;
+
 // struct, enum or class?
 // specify the exact number of each type
 enum class TetrominoType {

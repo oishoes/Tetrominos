@@ -60,7 +60,6 @@ void Grid::spawnTetromino(Tetromino* tetromino) {
     
     this->activeTetromino = tetromino;
     
-    // TODO: Place tetromino in correct position in grid
     this->activeTetromino->setAnchorPoint(Vec2(0.0f, 0.0f));
     
     int highestY = activeTetromino->getHighestYCoodinate();
