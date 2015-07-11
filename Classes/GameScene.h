@@ -13,12 +13,15 @@
 #include "CocosGUI.h"
 #include "Grid.h"
 #include "TetrominoBag.h"
+#include "PreviewGrid.h"
 
 class Grid;
 
 class GameScene : public cocos2d::Node {
 public:
     CREATE_FUNC(GameScene);
+    void setNetworkdedSession(bool networkedSession);
+    void receivedData(const void* data, unsigned long length);
     
 protected:
     Grid* grid;
@@ -28,6 +31,9 @@ protected:
     bool active;
     float stepInterval;
     float timeLeft;
+    bool networkedSession;
+    bool gameIsOver;
+    PreviewGrid* previewGrid;
     
     // Lifecycle
     bool init() override; // virtual bool init(); in older version
@@ -42,6 +48,9 @@ protected:
     void updateScoreStateFromScore();
     void updateGameSpeed(int score);
     void gameOver();
+    
+    // Networking
+    void sendGameStateOverNetwork();
     
     // Utility
     Coordinate convertPositionToCoodinate(cocos2d::Vec2 position);

@@ -75,6 +75,10 @@ bool Tetromino::initWithType(TetrominoType type) {
 
 #pragma -
 #pragma Public Methods
+Color3B Tetromino::getTetrominoColor() {
+    return this->color;
+}
+
 TetrominoType Tetromino::getTetrominoType() {
     return this->type;
 }

@@ -97,6 +97,12 @@ void Grid::step () {
     }
 }
 
+#pragma mark public 
+
+std::vector<std::vector<Sprite*>> Grid::getBlocksLanded() {
+    return this->blocksLanded;
+}
+
 Size Grid::getBlockSize() {
     Size contentSize = this->getContentSize();
     Size blockSize(contentSize.width / float(GRID_WIDTH), contentSize.height /float(GRID_HEIGHT));
